@@ -25,7 +25,5 @@ public final class Editorial {
 	@Column(name = "ID_EDITORIAL", unique = true, nullable = false)
 	private Long idEditorial;
 	@Column(name = "NAME_EDITORIAL")
-	private String nameEditorial;	
-	@OneToMany(cascade = CascadeType.ALL, mappedBy = "idEditorial")
-	private List<Book> bookEditorial;
+	private String nameEditorial;
 }

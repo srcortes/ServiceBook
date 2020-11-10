@@ -24,7 +24,5 @@ public final class Author {
 	@Column(name = "ID_AUTHOR", unique = true, nullable = false)
 	private Long idAuthor;
 	@Column(name = "NAME_AUTHOR")
-	private String nameAuthor;
-	@OneToMany(cascade = CascadeType.ALL, mappedBy = "idAuthor")
-	private List<Book> bookAuthor;
+	private String nameAuthor;	
 }

@@ -24,7 +24,5 @@ public final class Genre {
 	@Column(name = "ID_GENRE", unique = true, nullable = false)
 	private Long idGenre;
 	@Column(name = "DESCRIPTION")
-	private String description;
-	@OneToMany(cascade = CascadeType.ALL, mappedBy = "idGenre")
-	private List<Book> bookGenre;
+	private String description;	
 }

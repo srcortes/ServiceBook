@@ -17,6 +17,7 @@ import org.springframework.stereotype.Service;
 import com.appgate.test.constants.ConstantFileBook;
 import com.appgate.test.exception.ManagerApiException;
 import com.appgate.test.functionaInterface.ControlBook;
+import com.appgate.test.json.BookRest;
 import com.appgate.test.repositories.AuthorRepository;
 import com.appgate.test.repositories.BookRepository;
 import com.appgate.test.repositories.EditorialRepository;
@@ -141,5 +142,13 @@ public final class BookServiceImplement implements BookService {
 		entityAuthor.forEach(i->{
 			authorRepository.save(i);
 		});		
+	}
+
+	@Override
+	public List<BookRest> getListBook() throws ManagerApiException {
+		List<Book> listBook = bookRepository.findAll();		
+	
+		return listBook.stream().map(j-> modelMapper.map(j, BookRest.class)).collect(Collectors.toList());
+		
 	}	
 }
