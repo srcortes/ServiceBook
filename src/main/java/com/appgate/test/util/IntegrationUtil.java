@@ -3,6 +3,8 @@ package com.appgate.test.util;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.security.SecureRandom;
+import java.util.List;
+import java.util.function.Predicate;
 import java.util.stream.IntStream;
 
 import org.beanio.BeanReader;
@@ -17,6 +19,7 @@ import com.appgate.test.exception.ManagerApiException;
  *
  */
 public class IntegrationUtil {
+	private Boolean existObject = false;
 	public static String generateKey() {
 		StringBuffer strB = new StringBuffer("");
 		strB.append(String.valueOf(System.currentTimeMillis()).substring(7));
@@ -28,5 +31,13 @@ public class IntegrationUtil {
 	}
 	public static String withOutSpaceAndUpperCase(String value) {
 		return value.trim().toUpperCase();
-	}	
+	}
+	public <T> boolean existObject(List<T> list, Predicate<T> predicate) {		
+		list.forEach(i -> {
+			if (predicate.test(i))
+				existObject = true;
+		});
+
+		return existObject;
+	}
 }

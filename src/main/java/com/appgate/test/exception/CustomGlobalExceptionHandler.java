@@ -14,7 +14,6 @@ import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.context.request.WebRequest;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
-
 /**
  * 
  * @author srcortes
@@ -45,6 +44,12 @@ public class CustomGlobalExceptionHandler extends ResponseEntityExceptionHandler
 	public ResponseEntity<Object> customHandleErrorGeneric(final Exception ex, WebRequest request) {
 		ManagerApiException finEx = (ManagerApiException) ex;
 		ApiError apiError = new ApiError(finEx.getStatus(), "There are data with errors", ex.getMessage());
+		return new ResponseEntity<Object>(apiError, new HttpHeaders(), apiError.getStatus());
+	}
+	@ExceptionHandler(NotFoundException.class)
+	public ResponseEntity<Object> customHandleNotFound(final Exception ex, WebRequest request) {
+		NotFoundException finEx = (NotFoundException) ex;
+		ApiError apiError = new ApiError(finEx.getStatus(), "Item not Found", ex.getMessage());
 		return new ResponseEntity<Object>(apiError, new HttpHeaders(), apiError.getStatus());
 	}
 }

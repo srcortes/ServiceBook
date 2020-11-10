@@ -1,9 +1,7 @@
 package com.appgate.test.functionaInterface;
 
-import java.util.stream.IntStream;
-
-import org.beanio.BeanReader;
-
+import java.util.List;
+import java.util.function.Predicate;
 /**
  * 
  * @author srcortes
@@ -17,5 +15,9 @@ public interface ControlBook {
 	@FunctionalInterface
 	interface ControlKey{
 		String generateNumber();
-	}	
+	}
+	@FunctionalInterface
+	public interface ObjectExists {
+		<T> boolean existsRow(List<T> t, Predicate<T> predicate);
+	}
 }

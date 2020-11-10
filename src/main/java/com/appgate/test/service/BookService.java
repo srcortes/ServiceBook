@@ -21,5 +21,6 @@ public interface BookService {
 	void createGenre(Set<GenreDTO>listGenre)throws ManagerApiException;
 	void createAuthor(Set<AuthorDTO> listAuthor)throws ManagerApiException;
 	void createBook(Set<BookDTO> listBook)throws ManagerApiException;
+	String deleteBook(Long idBook)throws Exception;
 	List<BookRest> getListBook()throws ManagerApiException;
 }

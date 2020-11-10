@@ -24,6 +24,7 @@ import com.appgate.test.repositories.EditorialRepository;
 import com.appgate.test.repositories.GenreRepository;
 import com.appgate.test.service.BookService;
 import com.appgate.test.util.IntegrationUtil;
+import com.appgate.test.exception.NotFoundException;
 import com.appgate.test.constants.DictionaryErrors;
 import com.appgate.test.dto.AuthorDTO;
 import com.appgate.test.dto.BookDTO;
@@ -55,13 +56,13 @@ public final class BookServiceImplement implements BookService {
 	private HashSet<GenreDTO> genres = new HashSet<>();
 	private HashSet<AuthorDTO> authors = new HashSet<>();
 	private HashSet<EditorialDTO> editorials = new HashSet<>();
-	private HashSet<BookDTO> books = new HashSet<>();
-	private ControlBook.ControlString controlString = IntegrationUtil::withOutSpaceAndUpperCase;
-	private ControlBook.ControlKey key = IntegrationUtil::generateKey;
+	private HashSet<BookDTO> books = new HashSet<>();	
 	private final ModelMapper modelMapper = new ModelMapper();	
 	@Override
 	public String prepareObjectBook() throws ManagerApiException {
 		try {
+			ControlBook.ControlString controlString = IntegrationUtil::withOutSpaceAndUpperCase;
+			ControlBook.ControlKey key = IntegrationUtil::generateKey;
 			StreamFactory factory = StreamFactory.newInstance();
 			InputStream in = this.getClass().getResourceAsStream(ConstantFileBook.PATH_FILE_CSV.getValue());
 			factory.loadResource(ConstantFileBook.PATH_FILE_XML.getValue());
@@ -143,12 +144,34 @@ public final class BookServiceImplement implements BookService {
 			authorRepository.save(i);
 		});		
 	}
-
 	@Override
 	public List<BookRest> getListBook() throws ManagerApiException {
 		List<Book> listBook = bookRepository.findAll();		
-	
-		return listBook.stream().map(j-> modelMapper.map(j, BookRest.class)).collect(Collectors.toList());
+		listBook.sort((b1,b2)->b1.getTitle().compareTo(b2.getTitle()));
 		
+		return listBook.stream().map(j-> modelMapper.map(j, BookRest.class)).collect(Collectors.toList());		
+	}
+	@Override
+	public String deleteBook(Long idBook) throws Exception{
+		String message = null;	
+		try {		  
+		  ControlBook.ObjectExists exists = new IntegrationUtil()::existObject;
+		  boolean existBook = exists.existsRow(bookRepository.findAll(), i->i.getIdBook().equals(idBook));
+		  if(!existBook) {
+			  throw new NotFoundException(HttpStatus.NOT_FOUND, null);	
+		  }else {
+			  bookRepository.deleteById(idBook); 
+			  message = DictionaryErrors.BOOK_DELETE_SUCCESS.getDescriptionError() +" -> "+ idBook;
+		  }	  
+		}catch (NotFoundException ex) {
+			log.error(DictionaryErrors.ERROR_NOT_FOUND.getDescriptionError());
+			throw new NotFoundException(HttpStatus.NOT_FOUND, DictionaryErrors.ERROR_NOT_FOUND.getDescriptionError());
+		}catch (Exception ex) {
+			ex.printStackTrace();
+			log.error(DictionaryErrors.ERROR_INTERNAL_SERVER.getDescriptionError() + ex);
+			throw new ManagerApiException(HttpStatus.INTERNAL_SERVER_ERROR,
+					DictionaryErrors.ERROR_INTERNAL_SERVER.getDescriptionError(), ex);
+		}	
+		return  message;
 	}	
 }
