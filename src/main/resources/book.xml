@@ -1,0 +1,24 @@
+<beanio xmlns="http://www.beanio.org/2012/03">
+ <stream name="book" format="csv">
+  <parser>
+   <property name="delimiter" value="," />
+   <property name="lineSeparator" value="\n" />
+   <property name="whitespaceAllowed" value="true" />
+  </parser>  
+  <record name="detail" minOccurs="0" maxOccurs="unbounded"
+   class="com.appgate.test.dto.BookDTO">
+   <field  name="title" required="true"/>
+   <segment name="idGenre" class="com.appgate.test.dto.GenreDTO">      
+       <field name="description" required="true"/>
+   </segment>
+   <segment name="idAuthor" class="com.appgate.test.dto.AuthorDTO">      
+       <field name="nameAuthor" required="true"/>
+   </segment>  
+   <field name="price" required="true"/>    
+   <segment name="idEditorial" class="com.appgate.test.dto.EditorialDTO">      
+       <field name="nameEditorial" required="true"/>   
+   </segment>
+   <field name="datePublication" required="true" type="date" format="yyyy-MM-dd"/>
+   </record>
+ </stream>
+</beanio>
