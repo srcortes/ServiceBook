@@ -36,7 +36,6 @@ import com.appgate.test.entities.Editorial;
 import com.appgate.test.entities.Genre;
 
 import lombok.extern.slf4j.Slf4j;
-
 /**
  * 
  * @author srcortes
@@ -60,7 +59,8 @@ public final class BookServiceImplement implements BookService {
 	private final ModelMapper modelMapper = new ModelMapper();	
 	@Override
 	public String prepareObjectBook() throws ManagerApiException {
-		try {
+		String messages = null;
+		try {			
 			ControlBook.ControlString controlString = IntegrationUtil::withOutSpaceAndUpperCase;
 			ControlBook.ControlKey key = IntegrationUtil::generateKey;
 			StreamFactory factory = StreamFactory.newInstance();
@@ -97,21 +97,23 @@ public final class BookServiceImplement implements BookService {
 						.filter(j -> j.getNameEditorial().equalsIgnoreCase(bookDTO.getIdEditorial().getNameEditorial()))
 						.findFirst().get());
 				newBook.setDatePublication(bookDTO.getDatePublication());
-				books.add(newBook);
+				books.add(newBook);				
 			}
-			reader.close();
+			reader.close();	
+			messages = DictionaryErrors.SUCCESS_OPERATION.getDescriptionError();
 			this.createEditorial(editorials);
 			this.createAuthor(authors);
 			this.createGenre(genres);
 			this.createBook(books);
-		} catch (Exception ex) {
+		} catch (ManagerApiException ex) {
+			messages = DictionaryErrors.ERROR_INTERNAL_SERVER.getDescriptionError();
 			ex.printStackTrace();
 			log.error(DictionaryErrors.ERROR_INTERNAL_SERVER.getDescriptionError() + ex);
 			throw new ManagerApiException(HttpStatus.INTERNAL_SERVER_ERROR,
 					DictionaryErrors.ERROR_INTERNAL_SERVER.getDescriptionError(), ex);
 		}
 
-		return null;
+		return messages;
 	}
 	@Override
 	public void createEditorial(Set<EditorialDTO> listEditorial) throws ManagerApiException {

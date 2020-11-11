@@ -37,7 +37,7 @@ public class BookController {
 	@ApiResponses({ @ApiResponse(code = 200, message = "Ok", response = Integer.class),
 			@ApiResponse(code = 500, message = "Internal Server Error", response = ManagerApiException.class) })
 	@PostMapping(value = "/createBook")
-	public ManagerApiResponse<String> createEmploye() throws ManagerApiException{
+	public ManagerApiResponse<String> createBook() throws ManagerApiException{
 		
 		return new ManagerApiResponse<>("Succes", String.valueOf(HttpStatus.OK), "OK",
 				bookService.prepareObjectBook());
@@ -53,7 +53,8 @@ public class BookController {
 	}
 	@ApiOperation(notes = "Service is responsable oof close bet for id roulette", value = "Id roulette in state opening")
 	@ApiResponses({ @ApiResponse(code = 200, message = "Ok", response = String.class),			
-			@ApiResponse(code = 400, message = "Book not found", response = NotFoundException.class)})
+			@ApiResponse(code = 400, message = "Book not found", response = NotFoundException.class),
+			@ApiResponse(code = 500, message = "Internar Server Error", response = ManagerApiException.class)})
 	@PutMapping(value = "/deleteBook/{idBook}")
 	public ManagerApiResponse<String> deleteBook(@PathVariable("idBook") Long idBook) throws Exception{
 		
