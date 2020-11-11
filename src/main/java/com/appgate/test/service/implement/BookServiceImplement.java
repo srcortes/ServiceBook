@@ -2,21 +2,28 @@ package com.appgate.test.service.implement;
 
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.lang.reflect.Field;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
 
 import org.beanio.BeanReader;
 import org.beanio.StreamFactory;
+import org.modelmapper.Condition;
 import org.modelmapper.ModelMapper;
+import org.modelmapper.PropertyMap;
+import org.modelmapper.TypeMap;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.util.ReflectionUtils;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
 import com.appgate.test.constants.ConstantFileBook;
 import com.appgate.test.exception.ManagerApiException;
 import com.appgate.test.functionaInterface.ControlBook;
+import com.appgate.test.json.BookModificationRest;
 import com.appgate.test.json.BookRest;
 import com.appgate.test.repositories.AuthorRepository;
 import com.appgate.test.repositories.BookRepository;
@@ -106,8 +113,7 @@ public final class BookServiceImplement implements BookService {
 			this.createGenre(genres);
 			this.createBook(books);
 		} catch (ManagerApiException ex) {
-			messages = DictionaryErrors.ERROR_INTERNAL_SERVER.getDescriptionError();
-			ex.printStackTrace();
+			messages = DictionaryErrors.ERROR_INTERNAL_SERVER.getDescriptionError();			
 			log.error(DictionaryErrors.ERROR_INTERNAL_SERVER.getDescriptionError() + ex);
 			throw new ManagerApiException(HttpStatus.INTERNAL_SERVER_ERROR,
 					DictionaryErrors.ERROR_INTERNAL_SERVER.getDescriptionError(), ex);
@@ -173,7 +179,27 @@ public final class BookServiceImplement implements BookService {
 			log.error(DictionaryErrors.ERROR_INTERNAL_SERVER.getDescriptionError() + ex);
 			throw new ManagerApiException(HttpStatus.INTERNAL_SERVER_ERROR,
 					DictionaryErrors.ERROR_INTERNAL_SERVER.getDescriptionError(), ex);
-		}	
+		}
+		
 		return  message;
-	}	
+	}
+	@Override
+	public BookRest updateBook(Long idBook, BookModificationRest bookModification) throws Exception {
+		try {
+			modelMapper.getConfiguration().setSkipNullEnabled(true);
+			Book book = bookRepository.findById(idBook)
+					.orElseThrow(() -> new NotFoundException(HttpStatus.NOT_FOUND, null));
+			modelMapper.map(bookModification, book);
+			
+			return modelMapper.map(bookRepository.save(book), BookRest.class);
+		} catch (NotFoundException ex) {
+			log.error(DictionaryErrors.ERROR_NOT_FOUND.getDescriptionError());
+			throw new NotFoundException(HttpStatus.NOT_FOUND, DictionaryErrors.ERROR_NOT_FOUND.getDescriptionError());
+		} catch (Exception ex) {
+			ex.printStackTrace();
+			log.error(DictionaryErrors.ERROR_INTERNAL_SERVER.getDescriptionError() + ex);
+			throw new ManagerApiException(HttpStatus.INTERNAL_SERVER_ERROR,
+					DictionaryErrors.ERROR_INTERNAL_SERVER.getDescriptionError(), ex);
+		}		
+	}
 }

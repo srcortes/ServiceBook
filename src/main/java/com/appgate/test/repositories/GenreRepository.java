@@ -11,5 +11,4 @@ import com.appgate.test.entities.Genre;
  */
 @Repository
 public interface GenreRepository extends JpaRepository<Genre, Long>{
-
 }

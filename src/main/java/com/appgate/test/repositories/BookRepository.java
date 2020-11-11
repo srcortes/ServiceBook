@@ -16,13 +16,5 @@ import com.appgate.test.entities.Book;
  *
  */
 @Repository
-public interface BookRepository  extends JpaRepository<Book, Long>{	
-	/*@Modifying
-	@Query(value = "SELECT "+
-			"B.ID_BOOK, B.TITLE, G.ID_GENRE, G.DESCRIPTION, E.ID_EDITORIAL, E.NAME_EDITORIAL, A.ID_AUTHOR, A.NAME_AUTHOR,  B.TITLE, B.PRICE, B.DATE_PUBLICATION "+
-			"FROM LIBRARY.BOOK B "+
-			"JOIN LIBRARY.GENRE G ON G.ID_GENRE = B.ID_GENRE  "+
-			"JOIN LIBRARY.AUTHOR A ON A.ID_AUTHOR = B.ID_AUTHOR  "+
-			"JOIN LIBRARY.EDITORIAL E ON E.ID_EDITORIAL = B.ID_EDITORIAL",nativeQuery = true )
-	List<Book> informationBook();*/
+public interface BookRepository  extends JpaRepository<Book, Long>{
 }

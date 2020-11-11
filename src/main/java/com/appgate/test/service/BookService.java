@@ -8,6 +8,7 @@ import com.appgate.test.dto.BookDTO;
 import com.appgate.test.dto.EditorialDTO;
 import com.appgate.test.dto.GenreDTO;
 import com.appgate.test.exception.ManagerApiException;
+import com.appgate.test.json.BookModificationRest;
 import com.appgate.test.json.BookRest;
 
 /**
@@ -22,5 +23,6 @@ public interface BookService {
 	void createAuthor(Set<AuthorDTO> listAuthor)throws ManagerApiException;
 	void createBook(Set<BookDTO> listBook)throws ManagerApiException;
 	String deleteBook(Long idBook)throws Exception;
+	BookRest updateBook(Long idBook, BookModificationRest bookModification)throws Exception;
 	List<BookRest> getListBook()throws ManagerApiException;
 }

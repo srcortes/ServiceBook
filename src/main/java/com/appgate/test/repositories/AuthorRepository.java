@@ -11,5 +11,4 @@ import com.appgate.test.entities.Author;
  */
 @Repository
 public interface AuthorRepository  extends JpaRepository<Author, Long>{
-
 }

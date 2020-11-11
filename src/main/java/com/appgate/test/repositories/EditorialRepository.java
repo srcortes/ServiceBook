@@ -11,5 +11,4 @@ import com.appgate.test.entities.Editorial;
  */
 @Repository
 public interface EditorialRepository extends JpaRepository<Editorial, Long>{
-
 }
