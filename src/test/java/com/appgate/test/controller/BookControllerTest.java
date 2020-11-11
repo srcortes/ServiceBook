@@ -24,6 +24,7 @@ import com.appgate.test.entities.Author;
 import com.appgate.test.entities.Editorial;
 import com.appgate.test.entities.Genre;
 import com.appgate.test.exception.ManagerApiException;
+import com.appgate.test.json.BookModificationRest;
 import com.appgate.test.json.BookRest;
 import com.appgate.test.response.ManagerApiResponse;
 import com.appgate.test.service.BookService;
@@ -39,6 +40,7 @@ public class BookControllerTest {
 	private final Genre GENRE = new Genre();
 	private final Editorial EDITORIAL = new Editorial();
 	private final Author AUTHOR = new Author();
+	private final BookModificationRest BOOK_MODIFICATION_REST = new BookModificationRest();
 	@Mock
 	private BookService bookService;
 	@InjectMocks
@@ -60,6 +62,7 @@ public class BookControllerTest {
 		AUTHOR.setNameAuthor("J.k. Rowling");
 		BOOK_REST.setIdAuthor(AUTHOR);
 		LIST_BOOK_REST.add(BOOK_REST);
+		BOOK_MODIFICATION_REST.setTitle("ANIMALES FANTASTICOS Y DONDE ENCONTRARLOS");
 		
 	}
 	@Test
@@ -90,6 +93,15 @@ public class BookControllerTest {
 		assertEquals(response.getCode(), SUCCES_CODE);
 		assertEquals(response.getMessage(), SUCCES_MESSAGE);
 		assertEquals(response.getDataInformation(), SUCCES_DELETE_BOOK);
+	}
+	@Test
+	public void updateBook()throws Exception{
+		Mockito.when(bookService.updateBook(1L, BOOK_MODIFICATION_REST)).thenReturn(BOOK_REST);
+		final ManagerApiResponse<BookRest> response = bookController.updateBook(1L, BOOK_MODIFICATION_REST);
+		assertEquals(response.getStatus(), SUCCES_STATUS);
+		assertEquals(response.getCode(), SUCCES_CODE);
+		assertEquals(response.getMessage(), SUCCES_MESSAGE);
+		assertNotNull(response.getDataInformation());
 	}
 	
 

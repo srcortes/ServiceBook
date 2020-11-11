@@ -72,8 +72,8 @@ public class BookController {
 			@ApiResponse(code = 500, message = "Internar Server Error", response = Exception.class)})
 	@PatchMapping(value="/updateBook/{idBook}")
 	public ManagerApiResponse<BookRest> updateBook(@PathVariable("idBook") Long idBook, @RequestBody BookModificationRest field) throws Exception{
-		return new ManagerApiResponse<>("Succes", String.valueOf(HttpStatus.OK), "OK",
-				bookService.updateBook(idBook, field));
 		
+		return new ManagerApiResponse<>("Succes", String.valueOf(HttpStatus.OK), "OK",
+				bookService.updateBook(idBook, field));		
 	}
 }

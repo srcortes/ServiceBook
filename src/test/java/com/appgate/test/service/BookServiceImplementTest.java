@@ -8,6 +8,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Optional;
 import java.util.Set;
 import java.util.function.Predicate;
 
@@ -30,6 +31,7 @@ import com.appgate.test.entities.Genre;
 import com.appgate.test.exception.ManagerApiException;
 import com.appgate.test.exception.NotFoundException;
 import com.appgate.test.functionaInterface.ControlBook;
+import com.appgate.test.json.BookModificationRest;
 import com.appgate.test.json.BookRest;
 import com.appgate.test.repositories.AuthorRepository;
 import com.appgate.test.repositories.BookRepository;
@@ -47,15 +49,16 @@ public class BookServiceImplementTest {
 	private final Genre GENRE = new Genre();
 	private final Author AUTHOR = new Author();
 	private final Editorial EDITORIAL = new Editorial();
+	private final BookModificationRest BOOK_MODIFICATION_REST = new BookModificationRest();
 	private final Set<EditorialDTO> LIST_EDITORIAL_DTO = new HashSet<>();
 	private final Set<GenreDTO> LIST_GENRE_DTO = new HashSet<>();
 	private final Set<BookDTO> LIST_BOOK_DTO = new HashSet<>(); 
 	private final Set<AuthorDTO> LIST_AUTHOR_DTO = new HashSet<>(); 
 	private final List<Book> LIST_BOOK = new ArrayList<>();
 	private final List<Book> LIST_BOOK_EMPTY = new ArrayList<>();
+	private final Optional<Book> OPTIONAL_BOOK = Optional.of(BOOK);
 	private final String MESSAGE = "The books were kept";
-	private final String MESSAGE_BOOK_REMOVE = "Book removing succes..";
-	private final String MESSAGE_INTERNAL_SERVER = "INTERNAL SERVER ERROR CHECK LOG PLEASE.";
+	private final String MESSAGE_BOOK_REMOVE = "Book removing succes..";	
 	@Mock
 	private EditorialRepository editorialRepository;
 	@Mock
@@ -99,7 +102,9 @@ public class BookServiceImplementTest {
 		BOOK.setTitle("CRONICA DE UNA MUERTA ANUNCIADA");
 		BOOK.setPrice(98000D);
 		BOOK.setDatePublication(new Date());
-		LIST_BOOK.add(BOOK);		
+		LIST_BOOK.add(BOOK);
+		BOOK_MODIFICATION_REST.setTitle("HARRY POTTER Y LA ORDEN DEL FENIX");
+		
 	}
 	@Test
 	public void createEditorialTest() throws ManagerApiException {
@@ -179,5 +184,23 @@ public class BookServiceImplementTest {
 		bookServiceImplement.deleteBook(1L);
 		fail();
 	}
-
+	@Test(expected = Exception.class )
+	public void updateBookErrorTest() throws Exception{
+		Mockito.doThrow(Exception.class).when(bookRepository).findById(1L);		
+		bookServiceImplement.updateBook(1L, BOOK_MODIFICATION_REST);
+		fail();
+	}
+	@Test(expected = NotFoundException.class)
+	public void updateBookNotFoundTest() throws Exception{
+		Mockito.when(bookRepository.findById(1L)).thenReturn(Optional.empty());
+		bookServiceImplement.updateBook(1L, BOOK_MODIFICATION_REST);
+		fail();	
+	}
+	@Test
+	public void updateBookTest() throws Exception{
+		Mockito.when(bookRepository.findById(1L)).thenReturn(OPTIONAL_BOOK);
+		Mockito.when(bookRepository.save(Mockito.any(Book.class))).thenReturn(new Book());
+		BookRest response = bookServiceImplement.updateBook(1L, BOOK_MODIFICATION_REST);
+		assertNotNull(response);
+	}
 }
