@@ -3,7 +3,7 @@ This repository contains technical test development sources, for AppGate  Softwa
 
 ## Indications
 * For data load, csv file used this file is located in the following path **(_ServiceBook/src/main/resources/data/book.csv_)**, here is some test data.
-* The file is loaded using BEANIO there is a file(.xml) inside the project**(_ServiceBook/src/main/resources/book.xml_)** that is used for the validation of the csv file
+* The file is loaded using BEANIO there is a file(.xml) inside the project **(_ServiceBook/src/main/resources/book.xml_)** that is used for the validation of the csv file
 * The file structure must have the following order:
    * Name_Book, Genre, Author, Price, Date_publication(yyyy-MM-dd), example **(_Harry potter y El legado maldito,fantasia,J.k. Rowling,39.000,prueba,2020-01-31_)**
 * The services contains the methods:
